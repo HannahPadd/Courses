@@ -42,11 +42,13 @@ namespace LibClient
         public string client_id;
         private string bookName;
         // all the required settings are provided in this file
-        public string configFile = @"../ClientServerConfig.json";
-        //public string configFile = @"../../../../ClientServerConfig.json"; // for debugging
+        //public string configFile = @"../ClientServerConfig.json";
+        public string configFile = @"../../../../ClientServerConfig.json"; // for debugging
 
         // todo: add extra fields here in case needed 
-
+        public byte[] buffer;
+        public byte[] msg;
+        public string data;
         /// <summary>
         /// Initializes the client based on the given parameters and seeting file.
         /// </summary>
@@ -60,6 +62,7 @@ namespace LibClient
             this.result = new Output();
             result.BookName = bookName;
             result.Client_id = this.client_id;
+     
             // read JSON directly from a file
             try
             {
@@ -71,6 +74,7 @@ namespace LibClient
             {
                 Console.Out.WriteLine("[Client Exception] {0}", e.Message);
             }
+            this.serverEndPoint = new IPEndPoint(this.ipAddress, 11111);
         }
 
         /// <summary>
@@ -83,7 +87,15 @@ namespace LibClient
 
             // todo: implement the body to communicate with the server and requests the book. Return the result as an Output object.
             // Adding extra methods to the class is permitted. The signature of this method must not change.
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sock.Connect(this.serverEndPoint);
 
+
+            while (true)
+            {
+                Console.WriteLine("Succesfully connected");
+                break;
+            }
             return result;
         }
 
