@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using LibData;
-
+using System.Text;
 
 namespace LibServer
 {
@@ -24,10 +24,15 @@ namespace LibServer
     // Note: Complete the implementation of this class. You can adjust the structure of this class. 
     public class SequentialServer
     {
-        public byte[] buffer;
+        public byte[] buffer; 
+        public byte[] messageToBeSent;
+        public string jsonText; 
         public string data;
+        public Message message;
+        public Message receivedMessage;
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
+
         public SequentialServer()
         {
             //todo: implement the body. Add extra fields and methods to the class if it is needed
@@ -44,15 +49,79 @@ namespace LibServer
             sock.Bind(localEndpoint);
             sock.Listen(5);
             Socket serverSock = sock.Accept();
-
+            message = new Message();
+            receivedMessage = new Message();
+            messageToBeSent = new byte[1000];
 
             while (true)
             {
+                switch (receivedMessage.Type)
+                {
+                    case MessageType.Hello:
+                        Console.WriteLine("recieved Hello");
+                        message.Type = (MessageType)1;
+                        jsonText = JsonSerializer.Serialize<Message>(message);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        Console.WriteLine("returned welcome");
+                        break;
 
+                    case MessageType.Welcome:
+                        break;
+
+                //    case MessageType.BookInquiry:
+                //        Console.WriteLine("recieved bookInquiry");
+                //        Console.WriteLine("sending bookInquiry to helper");
+                //        receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
+                //        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                //        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                //        break;
+
+
+                //    case MessageType.UserInquiry:
+                //        Console.WriteLine("recieved UserInquiry");
+                //        Console.WriteLine("sending UserInquiry to helper");
+                //        receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
+                //        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                //        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                //        break;
+
+                    case MessageType.BookInquiryReply:
+                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        Console.WriteLine("book has been send to client");
+                        break;
+
+
+                    case MessageType.UserInquiryReply:
+                        break;
+
+                    case MessageType.EndCommunication:
+                        sock.Close();
+                        break;
+
+                    case MessageType.Error:
+                        break;
+
+                    case MessageType.NotFound:
+                        break;
+
+                }
+
+
+                if (data == null)
+                {
+                    Console.WriteLine("Connection is lost");
+                }
+                else
+                {
+                    Console.WriteLine("" + data);
+                    Console.WriteLine("" + jsonText);
+                    data = null;
+                    serverSock.Send(messageToBeSent);
+                }
             }
         }
     }
-
 }
 
 

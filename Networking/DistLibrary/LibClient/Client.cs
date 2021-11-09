@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text.Json;
 using LibData;
-
+using System.Text;
 
 namespace LibClient
 {
@@ -47,8 +47,11 @@ namespace LibClient
 
         // todo: add extra fields here in case needed 
         public byte[] buffer;
-        public byte[] msg;
+        public byte[] messageToBeSent;
+        public Message message;
+        public Message receivedMessage;
         public string data;
+        public string jsonText;
         /// <summary>
         /// Initializes the client based on the given parameters and seeting file.
         /// </summary>
@@ -62,7 +65,7 @@ namespace LibClient
             this.result = new Output();
             result.BookName = bookName;
             result.Client_id = this.client_id;
-     
+
             // read JSON directly from a file
             try
             {
@@ -89,15 +92,81 @@ namespace LibClient
             // Adding extra methods to the class is permitted. The signature of this method must not change.
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.Connect(this.serverEndPoint);
-
-
+            message = new Message();
+            receivedMessage = new Message();
+            messageToBeSent = new byte[1000];
             while (true)
             {
                 Console.WriteLine("Succesfully connected");
-                break;
-            }
-            return result;
-        }
 
+                switch (receivedMessage.Type)
+                {
+                    case MessageType.Hello:
+                        break;
+
+                    case MessageType.Welcome:
+                        Console.WriteLine("sending bookInquiry");
+                        message = new Message();
+                        message.Type = MessageType.BookInquiry;
+                        message.Content = bookName;
+                        jsonText = JsonSerializer.Serialize<Message>(message);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+
+                        sock.Send(messageToBeSent);
+                        break;
+
+                    case MessageType.BookInquiry:
+                        Console.WriteLine("Sening book inquiry");
+                        message.Type = MessageType.BookInquiry;
+                        message.Content = bookName;
+                        jsonText = JsonSerializer.Serialize<Message>(message);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        sock.Send(messageToBeSent);
+                        break;
+
+                    case MessageType.UserInquiry:
+                        break;
+
+                    case MessageType.BookInquiryReply:
+                        Console.WriteLine("got book back");
+                        BookData book = JsonSerializer.Deserialize<BookData>(receivedMessage.Content);
+                        this.result.Status = book.Status;
+                        if (book.Status == "Borrowed")
+                        {
+                            string userId = book.BorrowedBy;
+                            message = new Message();
+                            message.Type = MessageType.UserInquiry;
+                            message.Content = userId;
+                            jsonText = JsonSerializer.Serialize<Message>(message);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            sock.Send(messageToBeSent);
+                        }
+                        else
+                        {
+                            return result;
+                        }
+                        break;
+
+                    case MessageType.UserInquiryReply:
+                        Console.WriteLine("got user back");
+                        UserData user = JsonSerializer.Deserialize<UserData>(receivedMessage.Content);
+                        this.result.BorrowerName = user.Name;
+                        this.result.BorrowerEmail = user.Email;
+                        return result;
+
+
+                    case MessageType.EndCommunication:
+                        break;
+
+                    case MessageType.Error:
+                        break;
+
+                    case MessageType.NotFound:
+                        break;
+                }
+                return result;
+            }
+
+        }
     }
 }
