@@ -68,22 +68,22 @@ namespace LibServer
                     case MessageType.Welcome:
                         break;
 
-                //    case MessageType.BookInquiry:
-                //        Console.WriteLine("recieved bookInquiry");
-                //        Console.WriteLine("sending bookInquiry to helper");
-                //        receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
-                //        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
-                //        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                //        break;
+                   case MessageType.BookInquiry:
+                        Console.WriteLine("recieved bookInquiry");
+                        Console.WriteLine("sending bookInquiry to helper");
+                        receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
+                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        break;
 
 
-                //    case MessageType.UserInquiry:
-                //        Console.WriteLine("recieved UserInquiry");
-                //        Console.WriteLine("sending UserInquiry to helper");
-                //        receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
-                //        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
-                //        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                //        break;
+                 case MessageType.UserInquiry:
+                        Console.WriteLine("recieved UserInquiry");
+                        Console.WriteLine("sending UserInquiry to helper");
+                        receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
+                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        break;
 
                     case MessageType.BookInquiryReply:
                         Console.WriteLine("Received bookinquiry");
@@ -131,6 +131,54 @@ namespace LibServer
                     bookHelperSock.Bind(bookHelperEndpoint);
 
             }
+
+        }
+        public string Bookhelper(Message recieved)
+        {
+            byte[] buffer = new byte[10000];
+            byte[] msg = new byte[1000];
+            string data = null;
+            byte[] clientInfo = new byte[1000];
+            string Jsonmsg = JsonSerializer.Serialize<Message>(recieved);
+            clientInfo = Encoding.ASCII.GetBytes(Jsonmsg);
+            Message receivedMessage = new Message();
+
+            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
+            IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11112);
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sock.Connect(serverEndpoint);
+
+            sock.Send(clientInfo);
+            int c = sock.Receive(buffer);
+            data = Encoding.ASCII.GetString(buffer, 0, c);
+            Console.WriteLine(data);
+
+            return data;
+
+
+        }
+        public string Userhelper(Message recieved)
+        {
+            byte[] buffer = new byte[10000];
+            byte[] msg = new byte[1000];
+            string data = null;
+            byte[] clientInfo = new byte[1000];
+            string Jsonmsg = JsonSerializer.Serialize<Message>(recieved);
+            clientInfo = Encoding.ASCII.GetBytes(Jsonmsg);
+            Message receivedMessage = new Message();
+
+            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
+            IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11113);
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sock.Connect(serverEndpoint);
+
+            sock.Send(clientInfo);
+            int c = sock.Receive(buffer);
+            data = Encoding.ASCII.GetString(buffer, 0, c);
+
+            return data;
+
+
         }
     }
 }

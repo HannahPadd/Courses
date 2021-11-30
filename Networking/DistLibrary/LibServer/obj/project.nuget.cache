@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WBtdsdiRLvpEnhOOzyDf7fPQPE0V67nW9OVVU4q3EJBV3eaORZYxH7//e9djQPAxi/YeEK+6jrTfNSSeMeFysA==",
+  "dgSpecHash": "qJ0Ugus+gMaVG0MaQzKwI2iYLBrTI+aX8NNRRXjzCK5qh+ELRu27Rcs9umPbP9BcCZ4HBEOJJdMAir9/9Gd46Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibServer\\LibServer.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Hanna\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibServer\\LibServer.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
