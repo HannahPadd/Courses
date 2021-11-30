@@ -23,9 +23,20 @@ namespace BookHelper
     // Note: Complete the implementation of this class. You can adjust the structure of this class.
     public class SequentialHelper
     {
+        public byte[] buffer;
+        public byte[] messageToBeSent;
+        public string jsonText;
+        public string data;
+        public Message message;
+        public Message receivedMessage;
+        public IPAddress IPAddress;
+        public IPEndPoint localEndpoint;
         public SequentialHelper()
         {
             //todo: implement the body. Add extra fields and methods to the class if needed
+            buffer = new byte[1000];
+            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+            localEndpoint = new IPEndPoint(ipAddress, 11112);
         }
 
         public void start()

@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "945d9ca8-9e98-4fc5-b755-eb25f28a2b37": {
+      "ProjectGuid": "945d9ca8-9e98-4fc5-b755-eb25f28a2b37",
+      "DisplayName": "BookHelper",
+      "ColorIndex": 0
+    },
+    "7c8813e6-3bbf-4d15-9897-e282ec66eb8b": {
+      "ProjectGuid": "7c8813e6-3bbf-4d15-9897-e282ec66eb8b",
+      "DisplayName": "LibClient",
+      "ColorIndex": 1
+    },
+    "1843b15e-0b21-4c6d-915d-0ad50f4d0c98": {
+      "ProjectGuid": "1843b15e-0b21-4c6d-915d-0ad50f4d0c98",
+      "DisplayName": "LibServer",
+      "ColorIndex": 2
+    },
+    "73cc0e23-ae1e-42b5-8011-c069b2069b18": {
+      "ProjectGuid": "73cc0e23-ae1e-42b5-8011-c069b2069b18",
+      "DisplayName": "UserHelper",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}
