@@ -110,18 +110,10 @@ namespace LibServer
 
                 }
 
-
-                if (data == null)
-                {
-                    Console.WriteLine("Connection is lost");
-                }
-                else
-                {
                     Console.WriteLine("" + data);
                     Console.WriteLine("" + jsonText);
                     data = null;
                     serverSock.Send(messageToBeSent);
-                }
             }
 
             void ConnectToBookHelper()

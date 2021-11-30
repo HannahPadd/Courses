@@ -107,7 +107,7 @@ namespace LibClient
                     case MessageType.Welcome:
                         Console.WriteLine("sending bookInquiry");
                         message = new Message();
-                        message.Type = MessageType.BookInquiry;
+                        message.Type = (MessageType)2;
                         message.Content = bookName;
                         jsonText = JsonSerializer.Serialize<Message>(message);
                         messageToBeSent = Encoding.ASCII.GetBytes(jsonText);

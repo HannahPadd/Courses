@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj": {}
+    "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj": {}
   },
   "projects": {
-    "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj": {
+    "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
+        "projectUniqueName": "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
         "projectName": "BookHelper",
-        "projectPath": "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
-        "packagesPath": "C:\\Users\\giova\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\obj\\",
+        "projectPath": "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
+        "packagesPath": "C:\\Users\\Hanna\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\giova\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hanna\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -55,12 +53,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[5.0.12, 5.0.12]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
