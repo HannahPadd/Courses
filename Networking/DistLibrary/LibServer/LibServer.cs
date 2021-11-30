@@ -86,8 +86,11 @@ namespace LibServer
                 //        break;
 
                     case MessageType.BookInquiryReply:
+                        Console.WriteLine("Received bookinquiry");
+                        ConnectToBookHelper();
                         jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
                         messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                        
                         Console.WriteLine("book has been send to client");
                         break;
 
@@ -119,6 +122,14 @@ namespace LibServer
                     data = null;
                     serverSock.Send(messageToBeSent);
                 }
+            }
+
+            void ConnectToBookHelper()
+            {
+                    Socket bookHelperSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    IPEndPoint bookHelperEndpoint = new IPEndPoint(IPAddress, 11112);
+                    bookHelperSock.Bind(bookHelperEndpoint);
+
             }
         }
     }
