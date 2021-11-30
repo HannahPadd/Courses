@@ -23,14 +23,33 @@ namespace UserHelper
     // Note: Complete the implementation of this class. You can adjust the structure of this class.
     public class SequentialHelper
     {
+        public byte[] buffer;
+        public byte[] messageToBeSent;
+        public string jsonText;
+        public string data;
+        public Message message;
+        public Message receivedMessage;
+        public IPAddress IPAddress;
+        public IPEndPoint localEndpoint;
+
         public SequentialHelper()
         {
             //todo: implement the body. Add extra fields and methods to the class if needed
+            buffer = new byte[1000];
+            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+            localEndpoint = new IPEndPoint(ipAddress, 11113);
         }
 
         public void start()
         {
             //todo: implement the body. Add extra fields and methods to the class if needed
+            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sock.Bind(localEndpoint);
+            sock.Listen(5);
+            Socket serverSock = sock.Accept();
+            message = new Message();
+            receivedMessage = new Message();
+            messageToBeSent = new byte[1000];
         }
     }
 }
