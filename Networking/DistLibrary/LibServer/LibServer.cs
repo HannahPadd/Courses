@@ -28,7 +28,6 @@ namespace LibServer
         public byte[] messageToBeSent;
         public string jsonText; 
         public string data;
-        public Message message;
         public Message receivedMessage;
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
@@ -49,12 +48,23 @@ namespace LibServer
             sock.Bind(localEndpoint);
             sock.Listen(5);
             Socket serverSock = sock.Accept();
+            Message message = new Message();
             message = new Message();
             receivedMessage = new Message();
             messageToBeSent = new byte[1000];
 
             while (true)
             {
+                try
+                {
+                    int b = serverSock.Receive(buffer);
+                    data = Encoding.ASCII.GetString(buffer, 0, b);
+                    receivedMessage = JsonSerializer.Deserialize<Message>(data);
+                }
+                catch
+                {
+                    Console.WriteLine("waiting for a new message");
+                }
                 switch (receivedMessage.Type)
                 {
                     case MessageType.Hello:
@@ -63,6 +73,7 @@ namespace LibServer
                         jsonText = JsonSerializer.Serialize<Message>(message);
                         messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                         Console.WriteLine("returned welcome");
+                        serverSock.Send(messageToBeSent);
                         break;
 
                     case MessageType.Welcome:

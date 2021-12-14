@@ -52,6 +52,7 @@ namespace LibClient
         public Message receivedMessage;
         public string data;
         public string jsonText;
+        bool newmessage = false;
         /// <summary>
         /// Initializes the client based on the given parameters and seeting file.
         /// </summary>
@@ -65,6 +66,7 @@ namespace LibClient
             this.result = new Output();
             result.BookName = bookName;
             result.Client_id = this.client_id;
+            buffer = new byte[1000];
 
             // read JSON directly from a file
             try
@@ -92,79 +94,102 @@ namespace LibClient
             // Adding extra methods to the class is permitted. The signature of this method must not change.
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.Connect(this.serverEndPoint);
+
             message = new Message();
             receivedMessage = new Message();
             messageToBeSent = new byte[1000];
+            message.Type = MessageType.Hello;
+            message.Content = client_id;
+            string jsonText = JsonSerializer.Serialize<Message>(message);
+            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+            sock.Send(messageToBeSent);
+            Console.WriteLine("Succesfully connected");
+
+
             while (true)
             {
-                Console.WriteLine("Succesfully connected");
+               
+                try {
+                    int b = sock.Receive(buffer);
+                    data = Encoding.ASCII.GetString(buffer, 0, b);
+                    receivedMessage = JsonSerializer.Deserialize<Message>(data);
+                    newmessage = true;
+                }
+                catch 
+                { 
+                    Console.WriteLine("waiting for a new message"); 
+                }
 
-                switch (receivedMessage.Type)
-                {
-                    case MessageType.Hello:
-                        break;
+                
+                if(newmessage) {
+                    switch (receivedMessage.Type)
+                    {
+                        case MessageType.Hello:
+                            break;
 
-                    case MessageType.Welcome:
-                        Console.WriteLine("sending bookInquiry");
-                        message = new Message();
-                        message.Type = (MessageType)2;
-                        message.Content = bookName;
-                        jsonText = JsonSerializer.Serialize<Message>(message);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-
-                        sock.Send(messageToBeSent);
-                        break;
-
-                    case MessageType.BookInquiry:
-                        Console.WriteLine("Sening book inquiry");
-                        message.Type = MessageType.BookInquiry;
-                        message.Content = bookName;
-                        jsonText = JsonSerializer.Serialize<Message>(message);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                        sock.Send(messageToBeSent);
-                        break;
-
-                    case MessageType.UserInquiry:
-                        break;
-
-                    case MessageType.BookInquiryReply:
-                        Console.WriteLine("got book back");
-                        BookData book = JsonSerializer.Deserialize<BookData>(receivedMessage.Content);
-                        this.result.Status = book.Status;
-                        if (book.Status == "Borrowed")
-                        {
-                            string userId = book.BorrowedBy;
+                        case MessageType.Welcome:
+                            Console.WriteLine("sending bookInquiry");
                             message = new Message();
-                            message.Type = MessageType.UserInquiry;
-                            message.Content = userId;
+                            message.Type = (MessageType)2;
+                            message.Content = bookName;
+                            jsonText = JsonSerializer.Serialize<Message>(message);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+
+                            sock.Send(messageToBeSent);
+                            newmessage = false;
+                            break;
+
+                        case MessageType.BookInquiry:
+                            Console.WriteLine("Sening book inquiry");
+                            message.Type = MessageType.BookInquiry;
+                            message.Content = bookName;
                             jsonText = JsonSerializer.Serialize<Message>(message);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                             sock.Send(messageToBeSent);
-                        }
-                        else
-                        {
+                            break;
+
+                        case MessageType.UserInquiry:
+                            break;
+
+                        case MessageType.BookInquiryReply:
+                            Console.WriteLine("got book back");
+                            BookData book = JsonSerializer.Deserialize<BookData>(receivedMessage.Content);
+                            this.result.Status = book.Status;
+                            if (book.Status == "Borrowed")
+                            {
+                                string userId = book.BorrowedBy;
+                                message = new Message();
+                                message.Type = MessageType.UserInquiry;
+                                message.Content = userId;
+                                jsonText = JsonSerializer.Serialize<Message>(message);
+                                messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                                sock.Send(messageToBeSent);
+                            }
+                            else
+                            {
+                                return result;
+                            }
+                            break;
+
+                        case MessageType.UserInquiryReply:
+                            Console.WriteLine("got user back");
+                            UserData user = JsonSerializer.Deserialize<UserData>(receivedMessage.Content);
+                            this.result.BorrowerName = user.Name;
+                            this.result.BorrowerEmail = user.Email;
                             return result;
-                        }
-                        break;
-
-                    case MessageType.UserInquiryReply:
-                        Console.WriteLine("got user back");
-                        UserData user = JsonSerializer.Deserialize<UserData>(receivedMessage.Content);
-                        this.result.BorrowerName = user.Name;
-                        this.result.BorrowerEmail = user.Email;
-                        return result;
 
 
-                    case MessageType.EndCommunication:
-                        break;
+                        case MessageType.EndCommunication:
+                            break;
 
-                    case MessageType.Error:
-                        break;
+                        case MessageType.Error:
+                            break;
 
-                    case MessageType.NotFound:
-                        break;
+                        case MessageType.NotFound:
+                            break;
+                    }
                 }
-                return result;
+                
             }
 
         }
