@@ -35,6 +35,8 @@ namespace BookHelper
         private string bookData = @"C:\Users\giova\OneDrive\Bureaublad\Courses\Networking\DistLibrary\LibBookHelper\Books.json";
         private List<BookData> bookDataList;
         private BookData[] books;
+        public bool bookfound = false;
+       
 
         public SequentialHelper()
         {
@@ -81,7 +83,7 @@ namespace BookHelper
                         break;
 
                     case MessageType.BookInquiry:
-
+                        bookfound = false;
                         Console.WriteLine("recieved bookInquiry");
                         foreach (BookData d in this.bookDataList)
                         {
@@ -94,10 +96,19 @@ namespace BookHelper
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 serverSock.Send(messageToBeSent);
                                 Console.WriteLine("book info send to server");
+                                bookfound = true;
                                 break;
                             }
                         }
-
+                        if (!bookfound)
+                        {
+                            message = new Message();
+                            message.Type = (MessageType)8;
+                            jsonText = JsonSerializer.Serialize<Message>(message);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            serverSock.Send(messageToBeSent);
+                            Console.WriteLine("book was not found");
+                        }
                         break;
 
                     case MessageType.UserInquiry:

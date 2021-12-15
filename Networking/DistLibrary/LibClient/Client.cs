@@ -128,15 +128,30 @@ namespace LibClient
                             break;
 
                         case MessageType.Welcome:
-                            Console.WriteLine("sending bookInquiry");
-                            message = new Message();
-                            message.Type = (MessageType)2;
-                            message.Content = bookName;
-                            jsonText = JsonSerializer.Serialize<Message>(message);
-                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            if (Convert.ToInt32(client_id.Replace("Client ", "")) == -1)
+                            {
+                                Console.WriteLine("Ending comunications");
+                                message = new Message();
+                                message.Type = MessageType.EndCommunication;
+                                jsonText = JsonSerializer.Serialize<Message>(message);
+                                messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
 
-                            sock.Send(messageToBeSent);
-                            newmessage = false;
+                                sock.Send(messageToBeSent);
+                                sock.Close();
+                                return result;
+                            }
+                            else
+                            {
+                                Console.WriteLine("sending bookInquiry");
+                                message = new Message();
+                                message.Type = (MessageType)2;
+                                message.Content = bookName;
+                                jsonText = JsonSerializer.Serialize<Message>(message);
+                                messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+
+                                sock.Send(messageToBeSent);
+                                newmessage = false;
+                            }
                             break;
 
                         case MessageType.BookInquiry:
@@ -191,7 +206,9 @@ namespace LibClient
                             break;
 
                         case MessageType.NotFound:
-                            break;
+                            sock.Close();
+                            return result;
+                            
                     }
                 }
                 

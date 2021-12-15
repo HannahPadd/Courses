@@ -34,6 +34,7 @@ namespace LibServer
         bool newmessage = false;
         public Socket BookHelperSock;
         public Socket UserHelperSock;
+        public bool server = true;
 
 
         public SequentialServer()
@@ -57,7 +58,7 @@ namespace LibServer
             receivedMessage = new Message();
             messageToBeSent = new byte[1000];
 
-            while (true)
+            while (server)
             {
                 try
                 {
@@ -119,6 +120,7 @@ namespace LibServer
                             break;
 
                         case MessageType.EndCommunication:
+                            server = false;
                             sock.Close();
                             break;
 
