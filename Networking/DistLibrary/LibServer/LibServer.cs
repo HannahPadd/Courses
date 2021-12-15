@@ -32,6 +32,8 @@ namespace LibServer
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
         bool newmessage = false;
+        public Socket BookHelperSock;
+        public Socket UserHelperSock;
 
 
         public SequentialServer()
@@ -42,7 +44,7 @@ namespace LibServer
             localEndpoint = new IPEndPoint(ipAddress, 11111);
         }
 
-        public void start()
+        public virtual void start()
         {
             //todo: implement the body. Add extra fields and methods to the class if it is needed
 
@@ -66,7 +68,9 @@ namespace LibServer
                 }
                 catch
                 {
-                    Console.WriteLine("waiting for a new message");
+                    Console.WriteLine("Waiting for incoming connections ... ");
+                    sock.Listen(5);
+                    serverSock = sock.Accept();
                 }
                 if (newmessage)
                 {
@@ -145,13 +149,16 @@ namespace LibServer
             clientInfo = Encoding.ASCII.GetBytes(Jsonmsg);
             Message receivedMessage = new Message();
 
-            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11112);
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Connect(serverEndpoint);
+            if (BookHelperSock == null)
+            {
+                IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
+                IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11112);
+                BookHelperSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                BookHelperSock.Connect(serverEndpoint);
+            }
 
-            sock.Send(clientInfo);
-            int c = sock.Receive(buffer);
+            BookHelperSock.Send(clientInfo);
+            int c = BookHelperSock.Receive(buffer);
             Console.WriteLine("Received bookinquiry");
             data = Encoding.ASCII.GetString(buffer, 0, c);
             Console.WriteLine(data);
@@ -170,13 +177,16 @@ namespace LibServer
             clientInfo = Encoding.ASCII.GetBytes(Jsonmsg);
             Message receivedMessage = new Message();
 
-            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11113);
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Connect(serverEndpoint);
+            if (UserHelperSock == null)
+            {
+                IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
+                IPEndPoint serverEndpoint = new IPEndPoint(iPAddress, 11113);
+                UserHelperSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                UserHelperSock.Connect(serverEndpoint);
+            }
 
-            sock.Send(clientInfo);
-            int c = sock.Receive(buffer);
+            UserHelperSock.Send(clientInfo);
+            int c = UserHelperSock.Receive(buffer);
             Console.WriteLine("Received Userinquiry");
             data = Encoding.ASCII.GetString(buffer, 0, c);
 
