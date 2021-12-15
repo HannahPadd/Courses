@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Collections.Generic;
 using LibData;
+using System.Text;
 
 namespace UserHelper
 {
@@ -31,6 +32,9 @@ namespace UserHelper
         public Message receivedMessage;
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
+        private string userData = @"Users.json";
+        private List<UserData> userDataList;
+        private UserData[] users;
 
         public SequentialHelper()
         {
@@ -43,6 +47,10 @@ namespace UserHelper
         public void start()
         {
             //todo: implement the body. Add extra fields and methods to the class if needed
+            string UserContent = File.ReadAllText(userData);
+            this.userDataList = JsonSerializer.Deserialize<List<UserData>>(UserContent);
+            users = new UserData[this.userDataList.Count];
+
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.Bind(localEndpoint);
             sock.Listen(5);
@@ -53,10 +61,66 @@ namespace UserHelper
 
             while (true)
             {
+                try
+                {
+                    int b = serverSock.Receive(buffer);
+                    data = Encoding.ASCII.GetString(buffer, 0, b);
+                    receivedMessage = JsonSerializer.Deserialize<Message>(data);
+                    Console.WriteLine(receivedMessage.Type);
+                }
+                catch (Exception e)
+                {
+                    Console.Out.WriteLine("[Server exception] {0}", e.Message);
+                }
                 switch (receivedMessage.Type)
                 {
+                    case MessageType.Hello:
+
+                        break;
+
+                    case MessageType.Welcome:
+                        break;
+
+                    case MessageType.BookInquiry:
+                        break;
+
+                    case MessageType.UserInquiry:
+                        Console.WriteLine("recieved bookInquiry");
+                        foreach (UserData d in this.userDataList)
+                        {
+                            if (d.User_id == receivedMessage.Content)
+                            {
+                                Console.WriteLine(d);
+                                message.Content = JsonSerializer.Serialize<UserData>(d);
+                                message.Type = MessageType.UserInquiryReply;
+                                jsonText = JsonSerializer.Serialize<Message>(message);
+                                messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                                serverSock.Send(messageToBeSent);
+                                Console.WriteLine("user info send to server");
+                                break;
+                            }
+                        }
+                        break;
+
+                    case MessageType.BookInquiryReply:
+
+                        break;
+
+                    case MessageType.UserInquiryReply:
+                        break;
+
+                    case MessageType.EndCommunication:
+                        sock.Close();
+                        break;
+
+                    case MessageType.Error:
+                        break;
+
+                    case MessageType.NotFound:
+                        break;
 
                 }
+            
             }
         }
     }

@@ -31,6 +31,8 @@ namespace LibServer
         public Message receivedMessage;
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
+        bool newmessage = false;
+
 
         public SequentialServer()
         {
@@ -60,80 +62,77 @@ namespace LibServer
                     int b = serverSock.Receive(buffer);
                     data = Encoding.ASCII.GetString(buffer, 0, b);
                     receivedMessage = JsonSerializer.Deserialize<Message>(data);
+                    newmessage = true;
                 }
                 catch
                 {
                     Console.WriteLine("waiting for a new message");
                 }
-                switch (receivedMessage.Type)
+                if (newmessage)
                 {
-                    case MessageType.Hello:
-                        Console.WriteLine("recieved Hello");
-                        message.Type = (MessageType)1;
-                        jsonText = JsonSerializer.Serialize<Message>(message);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                        Console.WriteLine("returned welcome");
-                        serverSock.Send(messageToBeSent);
-                        break;
+                    switch (receivedMessage.Type)
+                    {
+                        case MessageType.Hello:
+                            Console.WriteLine("recieved Hello");
+                            message.Type = (MessageType)1;
+                            jsonText = JsonSerializer.Serialize<Message>(message);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            Console.WriteLine("returned welcome");
+                            serverSock.Send(messageToBeSent);
+                            newmessage = false;
+                            break;
 
-                    case MessageType.Welcome:
-                        break;
+                        case MessageType.Welcome:
+                            break;
 
-                   case MessageType.BookInquiry:
-                        Console.WriteLine("recieved bookInquiry");
-                        Console.WriteLine("sending bookInquiry to helper");
-                        receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
-                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                        break;
-
-
-                 case MessageType.UserInquiry:
-                        Console.WriteLine("recieved UserInquiry");
-                        Console.WriteLine("sending UserInquiry to helper");
-                        receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
-                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                        break;
-
-                    case MessageType.BookInquiryReply:
-                        Console.WriteLine("Received bookinquiry");
-                        ConnectToBookHelper();
-                        jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
-                        messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                        
-                        Console.WriteLine("book has been send to client");
-                        break;
+                        case MessageType.BookInquiry:
+                            Console.WriteLine("recieved bookInquiry");
+                            Console.WriteLine("sending bookInquiry to helper");
+                            receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
+                            jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            serverSock.Send(messageToBeSent);
+                            Console.WriteLine("book has been send to client");
+                            newmessage = false;
+                            break;
 
 
-                    case MessageType.UserInquiryReply:
-                        break;
+                        case MessageType.UserInquiry:
+                            Console.WriteLine("recieved UserInquiry");
+                            Console.WriteLine("sending UserInquiry to helper");
+                            receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
+                            jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
+                            messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
+                            serverSock.Send(messageToBeSent);
+                            newmessage = false;
+                            break;
 
-                    case MessageType.EndCommunication:
-                        sock.Close();
-                        break;
+                        case MessageType.BookInquiryReply:
+                            break;
 
-                    case MessageType.Error:
-                        break;
 
-                    case MessageType.NotFound:
-                        break;
+                        case MessageType.UserInquiryReply:
+                            break;
 
-                }
+                        case MessageType.EndCommunication:
+                            sock.Close();
+                            break;
+
+                        case MessageType.Error:
+                            break;
+
+                        case MessageType.NotFound:
+                            break;
+
+                    }
 
                     Console.WriteLine("" + data);
                     Console.WriteLine("" + jsonText);
                     data = null;
-                    serverSock.Send(messageToBeSent);
+                }
             }
 
-            void ConnectToBookHelper()
-            {
-                    Socket bookHelperSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    IPEndPoint bookHelperEndpoint = new IPEndPoint(IPAddress, 11112);
-                    bookHelperSock.Bind(bookHelperEndpoint);
 
-            }
 
         }
         public string Bookhelper(Message recieved)
@@ -153,6 +152,7 @@ namespace LibServer
 
             sock.Send(clientInfo);
             int c = sock.Receive(buffer);
+            Console.WriteLine("Received bookinquiry");
             data = Encoding.ASCII.GetString(buffer, 0, c);
             Console.WriteLine(data);
 
@@ -177,6 +177,7 @@ namespace LibServer
 
             sock.Send(clientInfo);
             int c = sock.Receive(buffer);
+            Console.WriteLine("Received Userinquiry");
             data = Encoding.ASCII.GetString(buffer, 0, c);
 
             return data;

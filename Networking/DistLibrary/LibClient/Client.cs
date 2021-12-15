@@ -146,6 +146,7 @@ namespace LibClient
                             jsonText = JsonSerializer.Serialize<Message>(message);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                             sock.Send(messageToBeSent);
+                            newmessage = false;
                             break;
 
                         case MessageType.UserInquiry:
@@ -164,10 +165,13 @@ namespace LibClient
                                 jsonText = JsonSerializer.Serialize<Message>(message);
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 sock.Send(messageToBeSent);
+                                newmessage = false;
                             }
                             else
                             {
+                                sock.Close();
                                 return result;
+                                
                             }
                             break;
 
@@ -176,6 +180,7 @@ namespace LibClient
                             UserData user = JsonSerializer.Deserialize<UserData>(receivedMessage.Content);
                             this.result.BorrowerName = user.Name;
                             this.result.BorrowerEmail = user.Email;
+                            sock.Close();
                             return result;
 
 
