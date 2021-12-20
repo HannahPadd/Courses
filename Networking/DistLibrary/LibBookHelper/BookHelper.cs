@@ -32,7 +32,7 @@ namespace BookHelper
         public Message receivedMessage;
         public IPAddress IPAddress;
         public IPEndPoint localEndpoint;
-        private string bookData = @"C:\Users\giova\OneDrive\Bureaublad\Courses\Networking\DistLibrary\LibBookHelper\Books.json";
+        private string bookData = @"Books.json";
         private List<BookData> bookDataList;
         private BookData[] books;
         public bool bookfound = false;

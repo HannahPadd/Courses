@@ -35,6 +35,7 @@ namespace LibServer
         public Socket BookHelperSock;
         public Socket UserHelperSock;
         public bool server = true;
+        public bool endCom = false;
 
 
         public SequentialServer()
@@ -120,6 +121,9 @@ namespace LibServer
                             break;
 
                         case MessageType.EndCommunication:
+                            endCom = true;
+                            Bookhelper(receivedMessage);
+                            Userhelper(receivedMessage);
                             server = false;
                             sock.Close();
                             break;
@@ -158,14 +162,20 @@ namespace LibServer
                 BookHelperSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 BookHelperSock.Connect(serverEndpoint);
             }
+            if (endCom == true)
+            {
+                BookHelperSock.Send(clientInfo);
+                return "Connection is ended";
+            }
+            else {
+                BookHelperSock.Send(clientInfo);
+                int c = BookHelperSock.Receive(buffer);
+                Console.WriteLine("Received bookinquiry");
+                data = Encoding.ASCII.GetString(buffer, 0, c);
+                Console.WriteLine(data);
 
-            BookHelperSock.Send(clientInfo);
-            int c = BookHelperSock.Receive(buffer);
-            Console.WriteLine("Received bookinquiry");
-            data = Encoding.ASCII.GetString(buffer, 0, c);
-            Console.WriteLine(data);
-
-            return data;
+                return data;
+            }
 
 
         }
@@ -187,6 +197,11 @@ namespace LibServer
                 UserHelperSock.Connect(serverEndpoint);
             }
 
+            if (endCom == true)
+            {
+                UserHelperSock.Send(clientInfo);
+                return "Connection is ended";
+            }
             UserHelperSock.Send(clientInfo);
             int c = UserHelperSock.Receive(buffer);
             Console.WriteLine("Received Userinquiry");

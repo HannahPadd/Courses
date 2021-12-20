@@ -60,7 +60,7 @@ namespace UserHelper
             receivedMessage = new Message();
             messageToBeSent = new byte[1000];
 
-            while (true)
+            while (server)
             {
                 try
                 {
