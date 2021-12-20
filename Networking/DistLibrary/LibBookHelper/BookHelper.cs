@@ -123,8 +123,10 @@ namespace BookHelper
                         break;
 
                     case MessageType.EndCommunication:
+
                         server = false;
                         sock.Close();
+                        Console.WriteLine("End communication.");
                         break;
 
                     case MessageType.Error:
