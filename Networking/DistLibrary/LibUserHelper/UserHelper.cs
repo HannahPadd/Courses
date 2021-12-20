@@ -35,6 +35,7 @@ namespace UserHelper
         private string userData = @"Users.json";
         private List<UserData> userDataList;
         private UserData[] users;
+        public bool server = true;
 
         public SequentialHelper()
         {
@@ -110,6 +111,7 @@ namespace UserHelper
                         break;
 
                     case MessageType.EndCommunication:
+                        server = false;
                         sock.Close();
                         break;
 

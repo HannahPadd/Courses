@@ -36,6 +36,7 @@ namespace BookHelper
         private List<BookData> bookDataList;
         private BookData[] books;
         public bool bookfound = false;
+        public bool server = true;
        
 
         public SequentialHelper()
@@ -60,7 +61,7 @@ namespace BookHelper
             receivedMessage = new Message();
             messageToBeSent = new byte[1000];
 
-            while (true)
+            while (server)
             {
                 try
                 {
@@ -122,6 +123,7 @@ namespace BookHelper
                         break;
 
                     case MessageType.EndCommunication:
+                        server = false;
                         sock.Close();
                         break;
 
