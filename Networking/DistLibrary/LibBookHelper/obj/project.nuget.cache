@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BhFpVkUXYDekjFN90xgFml8lDEq2UpOeOnIE/nExplFIuCRzWKQPQP+S/FC1zuw0uFEfORK04yl3/B6E2MsmOg==",
+  "dgSpecHash": "jyFbiTtB7AeFx4WQr7bDYDgxGX5eBJ9ShOn8d6tU4UuLGjHiN3qTI+cP/LckoAmVZo6kzSIY2Z0DAs20wUSREg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Hanna\\Documents\\GitHub\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Hanna\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\giova\\OneDrive\\Bureaublad\\Courses\\Networking\\DistLibrary\\LibBookHelper\\BookHelper.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

@@ -75,15 +75,6 @@ namespace UserHelper
                 }
                 switch (receivedMessage.Type)
                 {
-                    case MessageType.Hello:
-
-                        break;
-
-                    case MessageType.Welcome:
-                        break;
-
-                    case MessageType.BookInquiry:
-                        break;
 
                     case MessageType.UserInquiry:
                         Console.WriteLine("recieved bookInquiry");
@@ -103,24 +94,12 @@ namespace UserHelper
                         }
                         break;
 
-                    case MessageType.BookInquiryReply:
-
-                        break;
-
-                    case MessageType.UserInquiryReply:
-                        break;
-
                     case MessageType.EndCommunication:
                         server = false;
                         sock.Close();
                         Console.WriteLine("End communication.");
                         break;
 
-                    case MessageType.Error:
-                        break;
-
-                    case MessageType.NotFound:
-                        break;
 
                 }
             

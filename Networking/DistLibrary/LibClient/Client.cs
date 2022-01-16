@@ -124,9 +124,6 @@ namespace LibClient
                 if(newmessage) {
                     switch (receivedMessage.Type)
                     {
-                        case MessageType.Hello:
-                            break;
-
                         case MessageType.Welcome:
                             if (Convert.ToInt32(client_id.Replace("Client ", "")) == -1)
                             {
@@ -164,8 +161,6 @@ namespace LibClient
                             newmessage = false;
                             break;
 
-                        case MessageType.UserInquiry:
-                            break;
 
                         case MessageType.BookInquiryReply:
                             Console.WriteLine("got book back");
@@ -180,11 +175,13 @@ namespace LibClient
                                 jsonText = JsonSerializer.Serialize<Message>(message);
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 sock.Send(messageToBeSent);
+                                Console.WriteLine("send out user inquiry");
                                 newmessage = false;
                             }
                             else
                             {
                                 sock.Close();
+                                this.result.Status = "Not Found";
                                 return result;
                                 
                             }
@@ -198,12 +195,6 @@ namespace LibClient
                             sock.Close();
                             return result;
 
-
-                        case MessageType.EndCommunication:
-                            break;
-
-                        case MessageType.Error:
-                            break;
 
                         case MessageType.NotFound:
                             sock.Close();

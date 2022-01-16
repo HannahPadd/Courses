@@ -88,8 +88,6 @@ namespace LibServer
                             newmessage = false;
                             break;
 
-                        case MessageType.Welcome:
-                            break;
 
                         case MessageType.BookInquiry:
                             Console.WriteLine("recieved bookInquiry");
@@ -113,13 +111,6 @@ namespace LibServer
                             newmessage = false;
                             break;
 
-                        case MessageType.BookInquiryReply:
-                            break;
-
-
-                        case MessageType.UserInquiryReply:
-                            break;
-
                         case MessageType.EndCommunication:
                             endCom = true;
                             Bookhelper(receivedMessage);
@@ -128,11 +119,6 @@ namespace LibServer
                             sock.Close();
                             break;
 
-                        case MessageType.Error:
-                            break;
-
-                        case MessageType.NotFound:
-                            break;
 
                     }
 

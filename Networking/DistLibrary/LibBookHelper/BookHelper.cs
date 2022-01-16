@@ -76,13 +76,6 @@ namespace BookHelper
                 }
                 switch (receivedMessage.Type)
                 {
-                    case MessageType.Hello:
-
-                        break;
-
-                    case MessageType.Welcome:
-                        break;
-
                     case MessageType.BookInquiry:
                         bookfound = false;
                         Console.WriteLine("recieved bookInquiry");
@@ -112,16 +105,6 @@ namespace BookHelper
                         }
                         break;
 
-                    case MessageType.UserInquiry:
-                        break;
-
-                    case MessageType.BookInquiryReply:
-
-                        break;
-
-                    case MessageType.UserInquiryReply:
-                        break;
-
                     case MessageType.EndCommunication:
 
                         server = false;
@@ -129,11 +112,7 @@ namespace BookHelper
                         Console.WriteLine("End communication.");
                         break;
 
-                    case MessageType.Error:
-                        break;
 
-                    case MessageType.NotFound:
-                        break;
 
                 }
 
