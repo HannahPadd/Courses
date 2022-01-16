@@ -67,7 +67,7 @@ namespace UserHelper
                     int b = serverSock.Receive(buffer);
                     data = Encoding.ASCII.GetString(buffer, 0, b);
                     receivedMessage = JsonSerializer.Deserialize<Message>(data);
-                    Console.WriteLine(receivedMessage.Type);
+                    
                 }
                 catch (Exception e)
                 {
@@ -77,18 +77,18 @@ namespace UserHelper
                 {
 
                     case MessageType.UserInquiry:
-                        Console.WriteLine("recieved bookInquiry");
+                        
                         foreach (UserData d in this.userDataList)
                         {
                             if (d.User_id == receivedMessage.Content)
                             {
-                                Console.WriteLine(d);
+                                
                                 message.Content = JsonSerializer.Serialize<UserData>(d);
                                 message.Type = MessageType.UserInquiryReply;
                                 jsonText = JsonSerializer.Serialize<Message>(message);
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 serverSock.Send(messageToBeSent);
-                                Console.WriteLine("user info send to server");
+                                
                                 break;
                             }
                         }
@@ -97,7 +97,7 @@ namespace UserHelper
                     case MessageType.EndCommunication:
                         server = false;
                         sock.Close();
-                        Console.WriteLine("End communication.");
+                        
                         break;
 
 

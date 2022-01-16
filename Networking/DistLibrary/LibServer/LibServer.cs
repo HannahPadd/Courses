@@ -70,7 +70,7 @@ namespace LibServer
                 }
                 catch
                 {
-                    Console.WriteLine("Waiting for incoming connections ... ");
+                    
                     sock.Listen(5);
                     serverSock = sock.Accept();
                 }
@@ -79,31 +79,29 @@ namespace LibServer
                     switch (receivedMessage.Type)
                     {
                         case MessageType.Hello:
-                            Console.WriteLine("recieved Hello");
+                            
                             message.Type = (MessageType)1;
                             jsonText = JsonSerializer.Serialize<Message>(message);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
-                            Console.WriteLine("returned welcome");
+                            
                             serverSock.Send(messageToBeSent);
                             newmessage = false;
                             break;
 
 
                         case MessageType.BookInquiry:
-                            Console.WriteLine("recieved bookInquiry");
-                            Console.WriteLine("sending bookInquiry to helper");
+                            
                             receivedMessage = JsonSerializer.Deserialize<Message>(Bookhelper(receivedMessage));
                             jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                             serverSock.Send(messageToBeSent);
-                            Console.WriteLine("book has been send to client");
+                            
                             newmessage = false;
                             break;
 
 
                         case MessageType.UserInquiry:
-                            Console.WriteLine("recieved UserInquiry");
-                            Console.WriteLine("sending UserInquiry to helper");
+                            
                             receivedMessage = JsonSerializer.Deserialize<Message>(Userhelper(receivedMessage));
                             jsonText = JsonSerializer.Serialize<Message>(receivedMessage);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
@@ -122,8 +120,7 @@ namespace LibServer
 
                     }
 
-                    Console.WriteLine("" + data);
-                    Console.WriteLine("" + jsonText);
+                    
                     data = null;
                 }
             }
@@ -156,9 +153,9 @@ namespace LibServer
             else {
                 BookHelperSock.Send(clientInfo);
                 int c = BookHelperSock.Receive(buffer);
-                Console.WriteLine("Received bookinquiry");
+                
                 data = Encoding.ASCII.GetString(buffer, 0, c);
-                Console.WriteLine(data);
+                
 
                 return data;
             }
@@ -190,7 +187,7 @@ namespace LibServer
             }
             UserHelperSock.Send(clientInfo);
             int c = UserHelperSock.Receive(buffer);
-            Console.WriteLine("Received Userinquiry");
+            
             data = Encoding.ASCII.GetString(buffer, 0, c);
 
             return data;

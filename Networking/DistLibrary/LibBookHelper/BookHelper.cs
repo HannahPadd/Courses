@@ -68,7 +68,7 @@ namespace BookHelper
                     int b = serverSock.Receive(buffer);
                     data = Encoding.ASCII.GetString(buffer, 0, b);
                     receivedMessage = JsonSerializer.Deserialize<Message>(data);
-                    Console.WriteLine(receivedMessage.Type);
+                    
                 }
                 catch (Exception e)
                 {
@@ -78,18 +78,18 @@ namespace BookHelper
                 {
                     case MessageType.BookInquiry:
                         bookfound = false;
-                        Console.WriteLine("recieved bookInquiry");
+                        
                         foreach (BookData d in this.bookDataList)
                         {
                             if (d.Title == receivedMessage.Content)
                             {
-                                Console.WriteLine(d);
+                                
                                 message.Content = JsonSerializer.Serialize<BookData>(d);
                                 message.Type = (MessageType)4;
                                 jsonText = JsonSerializer.Serialize<Message>(message);
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 serverSock.Send(messageToBeSent);
-                                Console.WriteLine("book info send to server");
+                                
                                 bookfound = true;
                                 break;
                             }
@@ -101,7 +101,7 @@ namespace BookHelper
                             jsonText = JsonSerializer.Serialize<Message>(message);
                             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                             serverSock.Send(messageToBeSent);
-                            Console.WriteLine("book was not found");
+                           
                         }
                         break;
 
@@ -109,7 +109,7 @@ namespace BookHelper
 
                         server = false;
                         sock.Close();
-                        Console.WriteLine("End communication.");
+                        
                         break;
 
 

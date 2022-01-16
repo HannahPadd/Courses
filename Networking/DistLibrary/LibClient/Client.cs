@@ -103,7 +103,7 @@ namespace LibClient
             string jsonText = JsonSerializer.Serialize<Message>(message);
             messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
             sock.Send(messageToBeSent);
-            Console.WriteLine("Succesfully connected");
+            
 
 
             while (true)
@@ -127,7 +127,7 @@ namespace LibClient
                         case MessageType.Welcome:
                             if (Convert.ToInt32(client_id.Replace("Client ", "")) == -1)
                             {
-                                Console.WriteLine("Ending comunications");
+                                
                                 message = new Message();
                                 message.Type = MessageType.EndCommunication;
                                 jsonText = JsonSerializer.Serialize<Message>(message);
@@ -139,7 +139,7 @@ namespace LibClient
                             }
                             else
                             {
-                                Console.WriteLine("sending bookInquiry");
+                                
                                 message = new Message();
                                 message.Type = (MessageType)2;
                                 message.Content = bookName;
@@ -152,7 +152,7 @@ namespace LibClient
                             break;
 
                         case MessageType.BookInquiry:
-                            Console.WriteLine("Sening book inquiry");
+                            
                             message.Type = MessageType.BookInquiry;
                             message.Content = bookName;
                             jsonText = JsonSerializer.Serialize<Message>(message);
@@ -163,7 +163,7 @@ namespace LibClient
 
 
                         case MessageType.BookInquiryReply:
-                            Console.WriteLine("got book back");
+                            
                             BookData book = JsonSerializer.Deserialize<BookData>(receivedMessage.Content);
                             this.result.Status = book.Status;
                             if (book.Status == "Borrowed")
@@ -175,7 +175,7 @@ namespace LibClient
                                 jsonText = JsonSerializer.Serialize<Message>(message);
                                 messageToBeSent = Encoding.ASCII.GetBytes(jsonText);
                                 sock.Send(messageToBeSent);
-                                Console.WriteLine("send out user inquiry");
+                                
                                 newmessage = false;
                             }
                             else
@@ -188,7 +188,7 @@ namespace LibClient
                             break;
 
                         case MessageType.UserInquiryReply:
-                            Console.WriteLine("got user back");
+                            
                             UserData user = JsonSerializer.Deserialize<UserData>(receivedMessage.Content);
                             this.result.BorrowerName = user.Name;
                             this.result.BorrowerEmail = user.Email;
